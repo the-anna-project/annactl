@@ -6,8 +6,8 @@ go:
 - 1.7
 
 install:
-  - go get -d -v .
-  - go build .
+  - go get -d -v ./...
+  - go build ./...
 
 # Travis CI executes go test by default in case there is no script phase
 # defined. Therefore we need to define something to not run tests, because there

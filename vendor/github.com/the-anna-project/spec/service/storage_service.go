@@ -1,6 +1,8 @@
-package spec
+package service
 
 import (
+	"github.com/garyburd/redigo/redis"
+
 	objectspec "github.com/the-anna-project/spec/object"
 )
 
@@ -75,7 +77,7 @@ type StorageService interface {
 	// Set.
 	//
 
-	// GetAllFromSet returns all elements from the stored stored under key.
+	// GetAllFromSet returns all elements from the stored set under key.
 	GetAllFromSet(key string) ([]string, error)
 	// PushToSet adds the given element to the set identified by the given key.
 	// Note that a set is an unordered collection of distinct elements.
@@ -131,9 +133,9 @@ type StorageService interface {
 	// is walked completely. The given closer can be used to end the walk
 	// immediately.
 	WalkKeys(glob string, closer <-chan struct{}, cb func(key string) error) error
-	SetAddress(a string)
-	SetBackoffFactory(bf func() objectspec.Backoff)
-	SetPrefix(p string)
+	SetBackoffFactory(backoffFactory func() objectspec.Backoff)
+	SetPool(pool *redis.Pool)
+	SetPrefix(prefix string)
 	Service() ServiceCollection
 	SetServiceCollection(serviceCollection ServiceCollection)
 }
