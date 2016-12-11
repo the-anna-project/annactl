@@ -2,3 +2,34 @@ package: github.com/the-anna-project/annactl
 import:
 - package: github.com/go-kit/kit
   version: ~0.3.0
+  subpackages:
+  - log
+- package: github.com/juju/errgo
+- package: github.com/spf13/cobra
+- package: github.com/spf13/pflag
+- package: github.com/spf13/viper
+- package: github.com/the-anna-project/client
+  subpackages:
+  - collection
+  - service/text
+- package: github.com/the-anna-project/collection
+- package: github.com/the-anna-project/fs
+  subpackages:
+  - memory
+- package: github.com/the-anna-project/id
+- package: github.com/the-anna-project/input
+  subpackages:
+  - collection
+  - object/text
+  - service/text
+- package: github.com/the-anna-project/log
+- package: github.com/the-anna-project/output
+  subpackages:
+  - collection
+  - service/text
+- package: github.com/the-anna-project/permutation
+  subpackages:
+  - service
+- package: github.com/the-anna-project/spec
+  subpackages:
+  - service
