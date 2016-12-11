@@ -1,8 +1,4 @@
-package spec
-
-import (
-	objectspec "github.com/the-anna-project/spec/object"
-)
+package service
 
 // ConnectionService represents a service being able to manage connections
 // within the connection space.
@@ -36,56 +32,53 @@ import (
 //         importance.
 //
 // Following is an example of a possible storage key structure, to illustrate
-// persisted connections.
+// persisted connections. The given peers being used to create the peer and
+// connection keys are ordered as such, that they form directed and reproducible
+// storage keys. This means a connection can only be resolved into a certain,
+// desired direction.
 //
-//     Storage key of the peer "sum" and its corresponding hash map value.
+// This is a peer pointing to other peers. The key on the left is a string
+// being formed by a prefix and a peer value. The value on the right is a
+// list of strings being formed by peer values.
 //
-//         peer:sum
+//     peer:layer:information:sum     peer:layer:information:$id1
+//     peer:layer:information:$id1    peer:layer:information:sum,peer:layer:information:$id2,peer:layer:information:$id4
+//     peer:layer:information:$id2    peer:layer:information:$id3
+//     peer:layer:information:$id4    peer:layer:information:$id5
 //
-//             created     1478992355
-//             kind        behaviour
-//             position    432.8,4342,54.334
-//             updated     1478992355
+// This is a connection holding metadata. The key on the left is a string
+// being formed by a prefix and the values of the two peers forming the
+// connection. The order of the peers within the key expresses the
+// connection direction. The value on the right is a map of strings.
 //
-//     Storage key of the peer "number" and its corresponding hash map value.
+//     connection:peer:layer:information:sum:peer:layer:information:$id1     weight 23.775
+//     connection:peer:layer:information:$id1:peer:layer:information:sum     weight 23.775
+//     connection:peer:layer:information:$id1:peer:layer:information:$id2    weight 23.775
+//     connection:peer:layer:information:$id1:peer:layer:information:$id4    weight 23.775
+//     connection:peer:layer:information:$id2:peer:layer:information:$id3    weight 23.775
+//     connection:peer:layer:information:$id4:peer:layer:information:$id5    weight 23.775
 //
-//         peer:number
+// Following is a list of properties each peer has applied in form of
+// connections to itself.
 //
-//             created     1478992355
-//             kind        information
-//             position    432.8,4342,54.334
-//             updated     1478992355
+//     created
+//     kind
+//     position
 //
-//     Storage key of the connection between the peer "sum" and "number" and its
-//     corresponding hash map value. The two given peers being used to create
-//     the connection key are ordered alpha numerically beforehand, regardless
-//     of their kind.
+// Following is a list of properties each connection has applied in form of
+// metadata to itself.
 //
-//         peer:number:peer:sum
-//
-//             created    1478992355
-//             updated    1478992355
-//             weight     278.0082
-//
-//     Backreference from positions to peers and its corresponding list value.
-//
-//         position:432.8,4342,54.334    peer,peer
+//     created
+//     updated
+//     weight
 //
 type ConnectionService interface {
 	Boot()
-	// Create manages the creation of a connection.
-	//
-	//     peer
-	//     peer
-	//     connection
-	//     if not exist
-	//     ensure transaction
-	//
-	Create(a, b objectspec.Peer) error
+	Create(peerA, peerB string) error
+	Delete(peerA, peerB string) error
 	Metadata() map[string]string
+	Search(peerA, peerB string) (map[string]string, error)
 	Service() ServiceCollection
-	SetDimensionCount(dimensionCount int)
-	SetDimensionDepth(dimensionDepth int)
 	SetServiceCollection(serviceCollection ServiceCollection)
 	SetWeight(weight int)
 }

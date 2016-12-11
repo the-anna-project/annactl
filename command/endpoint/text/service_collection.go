@@ -7,7 +7,7 @@ import (
 
 	endpointcollection "github.com/the-anna-project/client/collection"
 	textendpoint "github.com/the-anna-project/client/service/text"
-	"github.com/the-anna-project/collection"
+	"github.com/the-anna-project/collection/collection"
 	"github.com/the-anna-project/fs/memory"
 	"github.com/the-anna-project/id"
 	inputcollection "github.com/the-anna-project/input/collection"
